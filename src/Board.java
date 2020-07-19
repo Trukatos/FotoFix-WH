@@ -17,35 +17,36 @@ public class Board extends JPanel{
 	public static Cell[][] board;
 	
 	private ArrayList<Cell> completeBoard = new ArrayList<Cell>(); 
-	public final int dimension;
+	public final int dimensionX, dimensionY;
 	private int x, y;
 	private final int figureWidth, figureHeight;
 	private JLabel label;
-	public Board(int dimension, BufferedImage puzzle){
-		this.setPreferredSize(new Dimension(5, 6));
+	public Board(int dimensionX, int dimensionY, BufferedImage puzzle){
+		this.setPreferredSize(new Dimension(dimensionX, dimensionY));
 		this.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5));
 		this.setBackground(Color.BLACK);
-		this.dimension = dimension;
-		board = new Cell[dimension][dimension];
+		this.dimensionX = dimensionX;
+		this.dimensionY = dimensionY;
+		board = new Cell[dimensionX][dimensionY];
 		x = 0;
 		y = 0;
-		figureWidth = puzzle.getWidth()/(dimension);
-		figureHeight = puzzle.getHeight()/dimension;
+		figureWidth = puzzle.getWidth()/dimensionX;
+		figureHeight = puzzle.getHeight()/dimensionY;
 
-		System.out.println(figureWidth + "" + figureHeight);
+		System.out.println(figureWidth + "   " + figureHeight);
 		
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		//this.setLayout(new GridLayout(dimension-1, dimension));
 		
 		
-		for(int i=0; i<dimension; i++){
-			for(int j=0; j<dimension; j++){
+		for(int i=0; i<dimensionY; i++){
+			for(int j=0; j<dimensionX; j++){
 				/*
 				if(i == dimension - 1 && j == dimension -1){			
 					continue;
 				}
 				*/
-				completeBoard.add(new Cell(i, j, new Figure(i, j, new ImageIcon(puzzle.getSubimage(x, y, figureWidth, figureHeight)), new ImageIcon(), dimension)));
+				completeBoard.add(new Cell(i, j, new Figure(i, j, new ImageIcon(puzzle.getSubimage(x, y, figureWidth, figureHeight)), dimensionX)));
 				
 				x += figureWidth;
 			}
@@ -62,8 +63,8 @@ public class Board extends JPanel{
 		Random randomGenerator = new Random();
 		ArrayList<Cell> cellStore = new ArrayList<Cell>(completeBoard);
 		int index = 0;
-		for(int i = 0; i<dimension; i++){
-			for(int j = 0; j<dimension; j++){
+		for(int i = 0; i<dimensionX; i++){
+			for(int j = 0; j<dimensionY; j++){
 				/*
 				if(i == dimension-1 && j == dimension-1){
 					board[i][j] = new Cell(i, j);
@@ -86,8 +87,8 @@ public class Board extends JPanel{
 	}
 	public void updateBoard(){
 		
-		for(int i = 0; i<dimension; i++){
-			for(int j = 0; j<dimension; j++){	
+		for(int i = 0; i<dimensionX; i++){
+			for(int j = 0; j<dimensionY; j++){	
 				if(board[i][j].getFigure() == null){
 					label = new JLabel();
 					label.setPreferredSize(new Dimension(figureWidth, figureHeight));

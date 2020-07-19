@@ -1,4 +1,6 @@
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,19 +15,23 @@ public class Figure extends JButton implements ActionListener{
 	private final int solutionPosX;
 	private final int solutionPosY;
 	private int dimension;
-	private final ImageIcon blank;
 	private final ImageIcon solved;
+	private boolean hidden;
+	private final String numLabel;
 	
-	public Figure(int solPosX, int solPosY, ImageIcon figure, ImageIcon blank, int dimension){
+	public Figure(int solPosX, int solPosY, ImageIcon figure, int dimension){
 		this.dimension = dimension;
 		this.solutionPosX = solPosX;
 		this.solutionPosY = solPosY;
 		this.posX = solPosX;
 		this.posY = solPosY;
-		this.blank = blank;
 		this.solved = figure;
-		
-		this.setIcon(blank);
+		this.hidden = true;
+		this.numLabel = Integer.toString((posY + 1) + posX * 4);
+		this.setBackground(Color.WHITE);
+		this.setForeground(Color.BLACK);
+		this.setFont(new Font("Georgia", Font.BOLD, 30));
+		this.setText(numLabel);
 		this.setPreferredSize(new Dimension(figure.getIconWidth(), figure.getIconHeight()));
 		this.addActionListener(this);
 		
@@ -54,20 +60,21 @@ public class Figure extends JButton implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		Move();
+		toggle();
 	}
-	private void Move(){
-		Cell[][] board = Board.board;
-		try{
+	
+	private void toggle(){
+		if(hidden) {
 			this.setIcon(solved);
-			return;
-
-		}catch(ArrayIndexOutOfBoundsException e){
-			
+			this.setText("");
+			this.hidden = false;
+		} else {
+			this.setIcon(null);
+			this.setText(numLabel);
+			this.hidden = true;
 		}
-		
 	}
+	
 	private void CheckAnswer(){
 		Figure figure = null;
 		for(int i = 0; i<dimension; i++){

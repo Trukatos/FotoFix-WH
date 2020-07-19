@@ -25,22 +25,22 @@ public class Puzzle extends JFrame{
 	//=============================== images and icons
 	private Image windowIcon = ImageLoader.loadImage("/puzzleIcon.png");
 	private BufferedImage playIcon, stopIcon, retryIcon, newGameIcon; 
-	private static BufferedImage def = ImageLoader.loadImage("/default.jpg");
+	private static BufferedImage def = ImageLoader.loadImage("/defaultLong.jpg");
 	//=============================== toolbar and its items
 	private JToolBar toolbar = new JToolBar(); //horizontal aligment by default
 	private JButton newGameButton;
 	//=============================== labels
 	private JLabel time = new JLabel(" 0 : 0 : 0 ");
-	private JLabel owner = new JLabel("FotoFix Digital von Mathias Assmann");
+	private JLabel owner = new JLabel("<html><div style='text-align: center;'>" + "FotoFix Digital von Mathias Assmann" + "</div></html>", SwingConstants.CENTER);
 	private static int moveCount = 0;
 	private static JLabel moves = new JLabel(" "+moveCount+" ");
 	private JLabel timeTitle = new JLabel(" Time ");
 	private JLabel movesTitle = new JLabel("      Moves      ");
 	//=============================== final values
-	private final int width = 1300;
-	private final int height = 810;
+	private final int width = 450;
+	private final int height = 900;
 	private final int iconSize = 30;
-	private final int fontSize = 35;
+	private final int fontSize = 18;
 	private final int delay = 1000;
 	//=============================== chronometer values
 	private int seconds = 0;
@@ -176,7 +176,7 @@ public class Puzzle extends JFrame{
 		miniImage.setIcon(new ImageIcon(mini));
 		if(board != null)
 			container.remove(board);
-		board = new Board(level, img);
+		board = new Board(4, 8, img);
 		chronometer.start();
 		container.remove(puzzelArea);
 		container.add(board, BorderLayout.CENTER);
