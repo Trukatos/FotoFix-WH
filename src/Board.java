@@ -21,20 +21,42 @@ public class Board extends JPanel{
 	private int x, y;
 	private final int figureWidth, figureHeight;
 	private JLabel label;
-	public Board(int dimensionX, int dimensionY, BufferedImage puzzle){
+	public Board(int picSize, BufferedImage puzzle){
+		
+		switch(picSize) {
+		case 32:
+			this.dimensionX = 4;
+			this.dimensionY = 8;
+			break;
+		case 64:
+			this.dimensionX = 4;
+			this.dimensionY = 16;
+			break;
+		case 128:
+			this.dimensionX = 8;
+			this.dimensionY = 16;
+			break;
+		default:
+			this.dimensionX = 4;
+			this.dimensionY = 8;
+			break;
+		}
+		
 		this.setPreferredSize(new Dimension(dimensionX, dimensionY));
 		this.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5));
 		this.setBackground(Color.BLACK);
-		this.dimensionX = dimensionX;
-		this.dimensionY = dimensionY;
+		
 		board = new Cell[dimensionX][dimensionY];
 		x = 0;
 		y = 0;
 		figureWidth = puzzle.getWidth()/dimensionX;
 		figureHeight = puzzle.getHeight()/dimensionY;
 
-		System.out.println(figureWidth + "   " + figureHeight);
-		
+		String params = "dimX = " + dimensionX + "   dimY = " + dimensionY + "\n" +
+						"puzzleW = " + puzzle.getWidth() + "   puzzleH = " + puzzle.getHeight() + "\n" +
+						"figureW = " + figureWidth + "   figureH = " + figureHeight;
+
+		System.out.println(params);
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		//this.setLayout(new GridLayout(dimension-1, dimension));
 		
@@ -46,7 +68,7 @@ public class Board extends JPanel{
 					continue;
 				}
 				*/
-				completeBoard.add(new Cell(i, j, new Figure(i, j, new ImageIcon(puzzle.getSubimage(x, y, figureWidth, figureHeight)), dimensionX)));
+				completeBoard.add(new Cell(i, j, new Figure(i, j, new ImageIcon(puzzle.getSubimage(x, y, figureWidth, figureHeight)), picSize)));
 				
 				x += figureWidth;
 			}

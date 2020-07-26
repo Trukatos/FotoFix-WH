@@ -14,23 +14,37 @@ public class Figure extends JButton implements ActionListener{
 	private int posY;
 	private final int solutionPosX;
 	private final int solutionPosY;
-	private int dimension;
 	private final ImageIcon solved;
-	private boolean hidden;
+	private int state;
+	private final int HIDDEN = 0;
+	private final int BLOCKED = 1;
+	private final int SOLVED = 2;
 	private final String numLabel;
+	private int fontSize = 32;
 	
-	public Figure(int solPosX, int solPosY, ImageIcon figure, int dimension){
-		this.dimension = dimension;
+	public Figure(int solPosX, int solPosY, ImageIcon figure, int picSize){
+		switch(picSize) {
+			case 32:
+				fontSize = 60;
+				break;
+			case 64:
+				fontSize = 40;
+				break;
+			case 128:
+				fontSize = 20;
+				break;
+		}
 		this.solutionPosX = solPosX;
 		this.solutionPosY = solPosY;
 		this.posX = solPosX;
 		this.posY = solPosY;
 		this.solved = figure;
-		this.hidden = true;
-		this.numLabel = Integer.toString((posY + 1) + posX * 4);
+		this.state = HIDDEN;
+		int numCols = picSize == 128? 8 : 4;
+		this.numLabel = Integer.toString((posY + 1) + posX * numCols);
 		this.setBackground(Color.WHITE);
 		this.setForeground(Color.BLACK);
-		this.setFont(new Font("Georgia", Font.BOLD, 30));
+		this.setFont(new Font("Georgia", Font.BOLD, fontSize));
 		this.setText(numLabel);
 		this.setPreferredSize(new Dimension(figure.getIconWidth(), figure.getIconHeight()));
 		this.addActionListener(this);
@@ -64,32 +78,24 @@ public class Figure extends JButton implements ActionListener{
 	}
 	
 	private void toggle(){
-		if(hidden) {
-			this.setIcon(solved);
-			this.setText("");
-			this.hidden = false;
-		} else {
-			this.setIcon(null);
-			this.setText(numLabel);
-			this.hidden = true;
+		switch(this.state) {
+			case HIDDEN:
+				this.setIcon(solved);
+				this.setText("");
+				this.state = SOLVED;
+				break;
+			case SOLVED:
+				this.setIcon(null);
+				this.setForeground(Color.RED);
+				this.setText("X");
+				this.state = BLOCKED;
+				break;
+			case BLOCKED:
+				this.setIcon(null);
+				this.setForeground(Color.BLACK);
+				this.setText(numLabel);
+				this.state = HIDDEN;
+
 		}
-	}
-	
-	private void CheckAnswer(){
-		Figure figure = null;
-		for(int i = 0; i<dimension; i++){
-			for(int j = 0; j<dimension; j++){
-				
-				figure = Board.board[i][j].getFigure();
-				if(figure == null)
-					continue;
-				
-				if(figure.getPosX() != figure.getSolutionPosX() || figure.getPosY() != figure.getSolutionPosY()){
-					return;
-				}
-			}	
-		}
-		Puzzle.getTimer().stop();
-		JOptionPane.showMessageDialog(new JPanel(), "Congratulations", "Puzzle completed", JOptionPane.INFORMATION_MESSAGE);
 	}
 }

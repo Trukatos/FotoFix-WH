@@ -31,13 +31,13 @@ public class Puzzle extends JFrame{
 	private JButton newGameButton;
 	//=============================== labels
 	private JLabel time = new JLabel(" 0 : 0 : 0 ");
-	private JLabel owner = new JLabel("<html><div style='text-align: center;'>" + "FotoFix Digital von Mathias Assmann" + "</div></html>", SwingConstants.CENTER);
+	private JLabel owner = new JLabel("<html><div style='text-align: center;'>" + "FotoFix Deluxe von Mathias Assmann" + "</div></html>", SwingConstants.CENTER);
 	private static int moveCount = 0;
 	private static JLabel moves = new JLabel(" "+moveCount+" ");
 	private JLabel timeTitle = new JLabel(" Time ");
 	private JLabel movesTitle = new JLabel("      Moves      ");
 	//=============================== final values
-	private final int width = 450;
+	private final int width = 650;
 	private final int height = 900;
 	private final int iconSize = 30;
 	private final int fontSize = 18;
@@ -172,11 +172,13 @@ public class Puzzle extends JFrame{
 		}
 		
 	}
-	public static void start(BufferedImage img, int level, BufferedImage mini){
+	public static void start(BufferedImage img, int picSize, BufferedImage mini){
 		miniImage.setIcon(new ImageIcon(mini));
 		if(board != null)
 			container.remove(board);
-		board = new Board(4, 8, img);
+						
+		
+		board = new Board(picSize, img);
 		chronometer.start();
 		container.remove(puzzelArea);
 		container.add(board, BorderLayout.CENTER);
