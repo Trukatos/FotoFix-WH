@@ -23,9 +23,9 @@ public class Puzzle extends JFrame{
 	private static JPanel puzzelArea;
 	private JPanel timeMoves;
 	//=============================== images and icons
-	private Image windowIcon = ImageLoader.loadImage("/puzzleIcon.png");
+	private Image windowIcon = ImageLoader.loadImage("puzzleIcon.png");
 	private BufferedImage playIcon, stopIcon, retryIcon, newGameIcon; 
-	private static BufferedImage def = ImageLoader.loadImage("/defaultLong.jpg");
+	private static BufferedImage def = ImageLoader.loadImage("default.jpg");
 	//=============================== toolbar and its items
 	private JToolBar toolbar = new JToolBar(); //horizontal aligment by default
 	private JButton newGameButton;
@@ -52,6 +52,7 @@ public class Puzzle extends JFrame{
 	private static Timer chronometer;
 	private static Container container;
 	
+	
 	public Puzzle(){
 		//=============================== set window values
 		this.setTitle("Puzzle");
@@ -65,10 +66,10 @@ public class Puzzle extends JFrame{
 		container = this.getContentPane();
 		chronometer = new Timer(delay, new IconTimerLitener());
 		//=============================== load all images and icons
-		playIcon = ImageLoader.loadImage("/playIcon.png");
-		stopIcon = ImageLoader.loadImage("/stopIcon.png");
-		retryIcon = ImageLoader.loadImage("/retryIcon.png");
-		newGameIcon = ImageLoader.loadImage("/newIcon.png");	
+		playIcon = ImageLoader.loadImage("playIcon.png");
+		stopIcon = ImageLoader.loadImage("stopIcon.png");
+		retryIcon = ImageLoader.loadImage("retryIcon.png");
+		newGameIcon = ImageLoader.loadImage("newIcon.png");	
 		//=============================== Initialize all toolbar items
 		
 		newGameButton = new JButton(new ImageIcon(newGameIcon.getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT)));
@@ -116,6 +117,7 @@ public class Puzzle extends JFrame{
 		
 		container.add(toolbar, BorderLayout.NORTH);
 		container.add(puzzelArea, BorderLayout.CENTER);
+		
 		
 		//container.add(timeMoves, BorderLayout.CENTER);
 	}
