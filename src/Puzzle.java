@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -25,7 +26,7 @@ public class Puzzle extends JFrame{
 	//=============================== images and icons
 	private Image windowIcon = ImageLoader.loadImage("puzzleIcon.png");
 	private BufferedImage playIcon, stopIcon, retryIcon, newGameIcon; 
-	private static BufferedImage def = ImageLoader.loadImage("default.jpg");
+	private static BufferedImage def = ImageLoader.loadImage("defaultLong.png");
 	//=============================== toolbar and its items
 	private JToolBar toolbar = new JToolBar(); //horizontal aligment by default
 	private JButton newGameButton;
@@ -37,8 +38,12 @@ public class Puzzle extends JFrame{
 	private JLabel timeTitle = new JLabel(" Time ");
 	private JLabel movesTitle = new JLabel("      Moves      ");
 	//=============================== final values
-	private final int width = 650;
-	private final int height = 900;
+	private int width = 928;
+	private int height = 995;
+	
+	private JTextField wText = new JTextField(Integer.toString(width));
+	private JTextField hText = new JTextField(Integer.toString(height));
+	
 	private final int iconSize = 30;
 	private final int fontSize = 18;
 	private final int delay = 1000;
@@ -52,14 +57,17 @@ public class Puzzle extends JFrame{
 	private static Timer chronometer;
 	private static Container container;
 	
+
+	private final Puzzle selfP;
 	
 	public Puzzle(){
 		//=============================== set window values
+		selfP = this;
 		this.setTitle("Puzzle");
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
-		this.setMinimumSize(new Dimension(width, height));
+		this.setMinimumSize(new Dimension(800, 600));
 		this.setMaximumSize(new Dimension(width, height));
 		this.setResizable(false);
 		this.setIconImage(windowIcon);
@@ -91,7 +99,32 @@ public class Puzzle extends JFrame{
 		owner.setFont(new Font("Georgia", Font.BOLD, fontSize));
 		owner.setForeground(Color.BLACK);
 		
+		
+		/*
+		ActionListener textAction = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				width = Integer.parseInt(wText.getText());
+				height = Integer.parseInt(hText.getText());	
+				this.
+			}
+		};
+		
+		wText.addActionListener(new IconTimerLitener());
+		hText.addActionListener(new IconTimerLitener());
+		*/
+		
+		
+		wText.addActionListener(new IconTimerLitener());
+		hText.addActionListener(new IconTimerLitener());
+		wText.setVisible(false);
+		hText.setVisible(false);
+		
 		toolbar.add(owner);
+		toolbar.add(wText);
+		toolbar.add(hText);
+		
 		//=============================== set labels properties
 		time.setForeground(Color.RED);
 		time.setFont(new Font("Georgia", Font.BOLD, fontSize));
@@ -158,17 +191,11 @@ public class Puzzle extends JFrame{
 				}else if(button.getName().equals("new")){
 					StartPuzzle start = new StartPuzzle();
 				}
-			}else if(comp instanceof Timer){
-				seconds ++;
-				if(seconds == 60){
-					seconds = 0;
-					minutes ++;
-					if(minutes == 60){
-						minutes = 0;
-						hours ++;
-					}
-				}
-				time.setText(" "+hours+" : "+minutes+" : "+seconds+" ");
+			}else if(comp instanceof JTextField){
+				width = Integer.parseInt(wText.getText());
+				height = Integer.parseInt(hText.getText());	
+				selfP.setSize(width, height);
+				System.out.println(width + "   " + height);
 				
 			}
 		}

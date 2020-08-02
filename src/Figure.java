@@ -22,7 +22,7 @@ public class Figure extends JButton implements ActionListener{
 	private final String numLabel;
 	private int fontSize = 32;
 	
-	public Figure(int solPosX, int solPosY, ImageIcon figure, int picSize){
+	public Figure(int solPosX, int solPosY, ImageIcon figure, int picSize, int numCols){
 		switch(picSize) {
 			case 32:
 				fontSize = 60;
@@ -40,7 +40,6 @@ public class Figure extends JButton implements ActionListener{
 		this.posY = solPosY;
 		this.solved = figure;
 		this.state = HIDDEN;
-		int numCols = picSize == 128? 8 : 4;
 		this.numLabel = Integer.toString((posY + 1) + posX * numCols);
 		this.setBackground(Color.WHITE);
 		this.setForeground(Color.BLACK);

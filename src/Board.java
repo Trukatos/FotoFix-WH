@@ -28,9 +28,9 @@ public class Board extends JPanel{
 			this.dimensionX = 4;
 			this.dimensionY = 8;
 			break;
-		case 64:
-			this.dimensionX = 4;
-			this.dimensionY = 16;
+		case 72:
+			this.dimensionX = 6;
+			this.dimensionY = 12;
 			break;
 		case 128:
 			this.dimensionX = 8;
@@ -68,7 +68,7 @@ public class Board extends JPanel{
 					continue;
 				}
 				*/
-				completeBoard.add(new Cell(i, j, new Figure(i, j, new ImageIcon(puzzle.getSubimage(x, y, figureWidth, figureHeight)), picSize)));
+				completeBoard.add(new Cell(i, j, new Figure(i, j, new ImageIcon(puzzle.getSubimage(x, y, figureWidth, figureHeight)), picSize, dimensionX)));
 				
 				x += figureWidth;
 			}

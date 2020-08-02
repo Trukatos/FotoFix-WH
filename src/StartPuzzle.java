@@ -107,7 +107,7 @@ public class StartPuzzle extends JFrame implements ActionListener{
 			sizeDescriptor.setText(picLabel + "-Pic: " + picSize + " Felder");
 			
 		} else if(button.getName().equals("M")){
-			picSize = 64;
+			picSize = 72;
 			picLabel = "M";
 			sizeDescriptor.setText(picLabel + "-Pic: " + picSize + " Felder");
 			
@@ -133,7 +133,7 @@ public class StartPuzzle extends JFrame implements ActionListener{
 		} else if(button.getName().equals("Start")){
 			if(image == null)
 				return;
-			BufferedImage puzzelImage = ImageResizer.resizeImage(image, 600, 800);
+			BufferedImage puzzelImage = ImageResizer.resizeImage(image, 900, 900);
 			BufferedImage miniImage = ImageResizer.resizeImage(image, 200, 400);
 			
 			Puzzle.start(puzzelImage, picSize, miniImage);
