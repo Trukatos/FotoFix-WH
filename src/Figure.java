@@ -6,8 +6,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 public class Figure extends JButton implements ActionListener{
 	private int posX;
@@ -70,6 +68,20 @@ public class Figure extends JButton implements ActionListener{
 	public int getSolutionPosY() {
 		return solutionPosY;
 	}
+	
+	public boolean isHidden() {
+		return this.state == HIDDEN;
+	}
+	
+	public String getNumLabel() {
+		return numLabel;
+	}
+	
+	public void solve() {
+		this.setIcon(solved);
+		this.setText("");
+		this.state = SOLVED;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -79,9 +91,7 @@ public class Figure extends JButton implements ActionListener{
 	private void toggle(){
 		switch(this.state) {
 			case HIDDEN:
-				this.setIcon(solved);
-				this.setText("");
-				this.state = SOLVED;
+				solve();
 				break;
 			case SOLVED:
 				this.setIcon(null);

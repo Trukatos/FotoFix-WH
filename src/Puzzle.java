@@ -25,14 +25,19 @@ public class Puzzle extends JFrame{
 	private JPanel timeMoves;
 	//=============================== images and icons
 	private Image windowIcon = ImageLoader.loadImage("puzzleIcon.png");
-	private BufferedImage playIcon, stopIcon, retryIcon, newGameIcon; 
+	private BufferedImage playIcon, stopIcon, retryIcon, newGameIcon, rngIcon; 
 	private static BufferedImage def = ImageLoader.loadImage("defaultLong.png");
 	//=============================== toolbar and its items
 	private JToolBar toolbar = new JToolBar(); //horizontal aligment by default
 	private JButton newGameButton;
+	private JButton rngButton;
+	
 	//=============================== labels
 	private JLabel time = new JLabel(" 0 : 0 : 0 ");
-	private JLabel owner = new JLabel("<html><div style='text-align: center;'>" + "FotoFix Deluxe von Mathias Assmann" + "</div></html>", SwingConstants.CENTER);
+	private JLabel owner = new JLabel("<html><div style='text-align: center;'>" + "FotoFix Deluxe von Mathias Assmann" + "</div></html>", SwingConstants.RIGHT);
+	private JLabel solveLabel = new JLabel("", SwingConstants.CENTER);
+	private final String feld = "Feld ";
+	private final String solveDisclaimer = " wurde gelöst!";
 	private static int moveCount = 0;
 	private static JLabel moves = new JLabel(" "+moveCount+" ");
 	private JLabel timeTitle = new JLabel(" Time ");
@@ -72,17 +77,22 @@ public class Puzzle extends JFrame{
 		this.setResizable(false);
 		this.setIconImage(windowIcon);
 		container = this.getContentPane();
-		chronometer = new Timer(delay, new IconTimerLitener());
+		chronometer = new Timer(delay, new IconTimerListener());
 		//=============================== load all images and icons
 		playIcon = ImageLoader.loadImage("playIcon.png");
 		stopIcon = ImageLoader.loadImage("stopIcon.png");
 		retryIcon = ImageLoader.loadImage("retryIcon.png");
-		newGameIcon = ImageLoader.loadImage("newIcon.png");	
+		newGameIcon = ImageLoader.loadImage("newIcon.png");
+		rngIcon = ImageLoader.loadImage("rngIcon.png");	
 		//=============================== Initialize all toolbar items
 		
 		newGameButton = new JButton(new ImageIcon(newGameIcon.getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT)));
 		newGameButton.setName("new");
-		newGameButton.addActionListener(new IconTimerLitener());
+		newGameButton.addActionListener(new IconTimerListener());
+		
+		rngButton = new JButton(new ImageIcon(rngIcon.getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT)));
+		rngButton.setName("random");
+		rngButton.addActionListener(new IconTimerListener());
 		//=============================== initialize panels
 		puzzelArea = new JPanel();
 		puzzelArea.setOpaque(true);
@@ -95,10 +105,13 @@ public class Puzzle extends JFrame{
 		
 		//=============================== add buttons to the toolbar
 		toolbar.add(newGameButton);
+		toolbar.add(rngButton);
 		
 		owner.setFont(new Font("Georgia", Font.BOLD, fontSize));
 		owner.setForeground(Color.BLACK);
 		
+		solveLabel.setFont(new Font("Georgia", Font.BOLD, fontSize));
+		solveLabel.setForeground(Color.BLACK);
 		
 		/*
 		ActionListener textAction = new ActionListener() {
@@ -116,12 +129,15 @@ public class Puzzle extends JFrame{
 		*/
 		
 		
-		wText.addActionListener(new IconTimerLitener());
-		hText.addActionListener(new IconTimerLitener());
+		wText.addActionListener(new IconTimerListener());
+		hText.addActionListener(new IconTimerListener());
 		wText.setVisible(false);
 		hText.setVisible(false);
 		
+		toolbar.addSeparator(new Dimension(20, 20));
+		toolbar.add(solveLabel);
 		toolbar.add(owner);
+		
 		toolbar.add(wText);
 		toolbar.add(hText);
 		
@@ -154,7 +170,7 @@ public class Puzzle extends JFrame{
 		
 		//container.add(timeMoves, BorderLayout.CENTER);
 	}
-	class IconTimerLitener implements ActionListener{
+	class IconTimerListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -190,7 +206,20 @@ public class Puzzle extends JFrame{
 					
 				}else if(button.getName().equals("new")){
 					StartPuzzle start = new StartPuzzle();
+				
+				} else if(button.getName().equals("random")) {
+					if(board != null) {
+						board.solveRandom();
+						String lastSolved = board.getLastSolved();
+						if(lastSolved == "") {
+							solveLabel.setText("");
+						} else {
+							solveLabel.setText(feld + board.getLastSolved() + solveDisclaimer);
+						}
+						
+					}
 				}
+			
 			}else if(comp instanceof JTextField){
 				width = Integer.parseInt(wText.getText());
 				height = Integer.parseInt(hText.getText());	

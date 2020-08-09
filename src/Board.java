@@ -16,11 +16,14 @@ public class Board extends JPanel{
 
 	public static Cell[][] board;
 	
-	private ArrayList<Cell> completeBoard = new ArrayList<Cell>(); 
+	private ArrayList<Cell> completeBoard = new ArrayList<Cell>();
 	public final int dimensionX, dimensionY;
 	private int x, y;
 	private final int figureWidth, figureHeight;
 	private JLabel label;
+	private String lastSolved = "";
+
+	
 	public Board(int picSize, BufferedImage puzzle){
 		
 		switch(picSize) {
@@ -122,8 +125,36 @@ public class Board extends JPanel{
 		}
 		Puzzle.getContainer().validate();
 	}
-	public void remover(){
+	public void remover() {
 		this.removeAll();
 		updateBoard();
+	}
+	
+	public void solveRandom() {
+		Random rng = new Random();
+		ArrayList<Figure> hidden = getHiddenFigures();
+		if(hidden.size() == 0) {
+			lastSolved = "";
+			return;
+		}
+		int index = rng.nextInt(hidden.size());
+		hidden.get(index).solve();	
+		lastSolved = hidden.get(index).getNumLabel();
+	}
+	
+	private ArrayList<Figure> getHiddenFigures() {
+		ArrayList<Figure> hidden = new ArrayList<Figure>();
+		Figure f;
+		for (int i = 0; i < completeBoard.size(); i++) {
+			f = completeBoard.get(i).getFigure();
+			if(f.isHidden())
+				hidden.add(f);
+		}
+		return hidden;
+		
+	}
+	
+	public String getLastSolved() {
+		return lastSolved;
 	}
 }
