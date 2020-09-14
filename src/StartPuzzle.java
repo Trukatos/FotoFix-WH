@@ -1,3 +1,5 @@
+import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
@@ -17,6 +19,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class StartPuzzle extends JFrame implements ActionListener{
 	private JPanel main = new JPanel();
@@ -24,47 +29,61 @@ public class StartPuzzle extends JFrame implements ActionListener{
 	private JRadioButton S, M, L;
 	private JPanel sizeButtonsPanel = new JPanel();
 	private JLabel sizeDescriptor;
-	private JLabel puzzleImage = new JLabel("Wähle ein Bild und den Schwierigkeitsgrad");
-	private JFileChooser filechooser;
+	private JLabel descriptorLabel = new JLabel("<html><body>&nbsp&nbsp&nbsp Wähle Bild und<br>Schwierigkeitsgrad</body></html>", SwingConstants.CENTER);
+	private JLabel picTitleLabel = new JLabel("Bildbeschreibung:", SwingConstants.CENTER);
+	private JTextField picTitleField = new JTextField("Team 1 Small/Big");
+	private JFileChooser fileChooser;
 	private int picSize = 32;
 	private String picLabel = "S";
 	private BufferedImage image = null;
+	private Font font = new Font("Georgia", Font.BOLD, 40);
 	private Image windowIcon = ImageLoader.loadImage("/puzzleIcon.png");
+	private String imgPath = "";  //imgPath is needed for the save file
 	
 	public StartPuzzle(){
 		setTitle("Neues Pic");
-		setSize(270, 500);
+		setSize(500, 900);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		main.setLayout(new FlowLayout(FlowLayout.CENTER));
+		main.setLayout(new FlowLayout(FlowLayout.CENTER, 200, 10));
 		this.setIconImage(windowIcon);
 		
 		
-		open = new JButton(new ImageIcon(ImageLoader.loadImage("/openImage.jpg").getScaledInstance(250, 250, Image.SCALE_DEFAULT)));
+		
+		open = new JButton(new ImageIcon(ImageLoader.loadImage("/openImage.jpg").getScaledInstance(440, 400, Image.SCALE_DEFAULT)));
+		open.setPreferredSize(new Dimension(440, 400));
 		open.setName("Open");
 		open.addActionListener(this);
 		
 		sizeDescriptor = new JLabel(picLabel + "-Pic: " + picSize + " Felder");
-		sizeDescriptor.setFont(new Font("Georgia", Font.BOLD, 20));
+		sizeDescriptor.setFont(font);
+		
+		descriptorLabel.setFont(font);
 		
 		//horizontal gap = 20; vertical gap = 0
-		sizeButtonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
+		sizeButtonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		
 		S = new JRadioButton("S");
 		S.setName("S");
-		S.setFont(new Font("Georgia", Font.BOLD, 20));
+		S.setFont(font);
+		S.setSelectedIcon(new ImageIcon(ImageLoader.loadImage("/radioButtonChecked.png")));
+		S.setIcon(new ImageIcon(ImageLoader.loadImage("/radioButtonUnchecked.png")));
 		S.setSelected(true);
 		S.addActionListener(this);
 		
 		M = new JRadioButton("M");
 		M.setName("M");
-		M.setFont(new Font("Georgia", Font.BOLD, 20));
+		M.setFont(font);
+		M.setSelectedIcon(new ImageIcon(ImageLoader.loadImage("/radioButtonChecked.png")));
+		M.setIcon(new ImageIcon(ImageLoader.loadImage("/radioButtonUnchecked.png")));
 		M.addActionListener(this);
 		
 		L = new JRadioButton("L");
 		L.setName("L");
-		L.setFont(new Font("Georgia", Font.BOLD, 20));
+		L.setFont(font);
+		L.setSelectedIcon(new ImageIcon(ImageLoader.loadImage("/radioButtonChecked.png")));
+		L.setIcon(new ImageIcon(ImageLoader.loadImage("/radioButtonUnchecked.png")));
 		L.addActionListener(this);
 		
         ButtonGroup bgroup = new ButtonGroup();
@@ -76,15 +95,21 @@ public class StartPuzzle extends JFrame implements ActionListener{
 		sizeButtonsPanel.add(M);
 		sizeButtonsPanel.add(L);
 		
-		start = new JButton("START");
+		start = new JButton("S T A R T");
+		start.setPreferredSize(new Dimension(440, 100));
 		start.setName("Start");
-		start.setFont(new Font("Georgia", Font.BOLD, 40));
+		start.setFont(new Font("Georgia", Font.BOLD, 80));		
 		start.addActionListener(this);
 		
-		main.add(puzzleImage);
+		picTitleLabel.setFont(font);
+		picTitleField.setFont(font);
+		
+		main.add(descriptorLabel);
 		main.add(open);
 		main.add(sizeDescriptor);
 		main.add(sizeButtonsPanel);
+		main.add(picTitleLabel);
+		main.add(picTitleField);
 		main.add(start);
 		add(main);
 		setVisible(true);
@@ -117,26 +142,42 @@ public class StartPuzzle extends JFrame implements ActionListener{
 			sizeDescriptor.setText(picLabel + "-Pic: " + picSize + " Felder");
 			
 		} else if(button.getName().equals("Open")){			
-			filechooser = new JFileChooser();
-			int action = filechooser.showOpenDialog(null);
-			if(action == JFileChooser.APPROVE_OPTION){
-				File file = filechooser.getSelectedFile();
-				try {
-					image = ImageIO.read(file);
-					open.setIcon( new ImageIcon(image.getScaledInstance(250, 250, Image.SCALE_DEFAULT)));
-					
-				} catch (IOException e1) {
-					System.out.println("Kein Bild erkannt! Wähle ein Bild im Format jpeg oder png");
-				}
+			/*
+			fileChooser = new JFileChooser();
+			fileChooser.setCurrentDirectory(new java.io.File(System.getProperty("user.home") + "/Desktop"));
+			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png", "gif", "bmp"));
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.setPreferredSize(new Dimension(1200, 800));
+			//fileChooser.setFileSystemView();
+			 * 
+			 */
+			FileDialog fd = new FileDialog(this, "Wähle das Bild", FileDialog.LOAD);
+			fd.setDirectory("Desktop");
+			fd.setPreferredSize(new Dimension(1200, 800));
+			fd.setVisible(true);
+			//fd.
+			//int action = fileChooser.showOpenDialog(null);
+		//	if(action == JFileChooser.APPROVE_OPTION){
+				//File file = fileChooser.getSelectedFile();
+			imgPath = fd.getDirectory() + fd.getFile();
+			//imgPath is needed for the save file
+			File file = new File(fd.getDirectory() + fd.getFile());
+			try {
+				image = ImageIO.read(file);
+				open.setIcon( new ImageIcon(image.getScaledInstance(440, 400, Image.SCALE_DEFAULT)));
+				
+			} catch (IOException e1) {
+				System.out.println("Kein Bild erkannt! Wähle ein Bild im Format jpg oder png");
 			}
+		//	}
 			
 		} else if(button.getName().equals("Start")){
 			if(image == null)
 				return;
-			BufferedImage puzzelImage = ImageResizer.resizeImage(image, 900, 900);
-			BufferedImage miniImage = ImageResizer.resizeImage(image, 200, 400);
+			BufferedImage puzzleImage = ImageResizer.resizeImage(image, 900, 900);
 			
-			Puzzle.start(puzzelImage, picSize, miniImage);
+			String title = picTitleField.getText();
+			Puzzle.start(imgPath, puzzleImage, picSize, title, null);
 			this.dispose();
 		}
 		

@@ -77,10 +77,45 @@ public class Figure extends JButton implements ActionListener{
 		return numLabel;
 	}
 	
+	public int getState() {
+		return state;
+	}
+	
+	public void setState(int state) throws IllegalArgumentException {
+			
+		switch(state) {
+			case HIDDEN:
+				hide();
+				break;
+			case SOLVED:
+				solve();
+				break;
+			case BLOCKED:
+				block();
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid State for Figure: " + state);
+		}
+	}
+	
 	public void solve() {
 		this.setIcon(solved);
 		this.setText("");
 		this.state = SOLVED;
+	}
+	
+	public void hide() {
+		this.setIcon(null);
+		this.setForeground(Color.BLACK);
+		this.setText(numLabel);
+		this.state = HIDDEN;
+	}
+	
+	public void block() {
+		this.setIcon(null);
+		this.setForeground(Color.RED);
+		this.setText("X");
+		this.state = BLOCKED;
 	}
 
 	@Override
@@ -94,17 +129,10 @@ public class Figure extends JButton implements ActionListener{
 				solve();
 				break;
 			case SOLVED:
-				this.setIcon(null);
-				this.setForeground(Color.RED);
-				this.setText("X");
-				this.state = BLOCKED;
+				block();
 				break;
 			case BLOCKED:
-				this.setIcon(null);
-				this.setForeground(Color.BLACK);
-				this.setText(numLabel);
-				this.state = HIDDEN;
-
+				hide();
 		}
 	}
 }

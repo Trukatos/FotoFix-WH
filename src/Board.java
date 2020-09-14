@@ -1,8 +1,6 @@
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,9 +20,13 @@ public class Board extends JPanel{
 	private final int figureWidth, figureHeight;
 	private JLabel label;
 	private String lastSolved = "";
-
+	private int picSize;
+	private String imgPath;
 	
-	public Board(int picSize, BufferedImage puzzle){
+	public Board(int picSize, BufferedImage puzzle, String imgPath, int[] savedResults) {
+		
+		this.picSize = picSize;
+		this.imgPath = imgPath;
 		
 		switch(picSize) {
 		case 32:
@@ -55,11 +57,13 @@ public class Board extends JPanel{
 		figureWidth = puzzle.getWidth()/dimensionX;
 		figureHeight = puzzle.getHeight()/dimensionY;
 
+		/*
 		String params = "dimX = " + dimensionX + "   dimY = " + dimensionY + "\n" +
 						"puzzleW = " + puzzle.getWidth() + "   puzzleH = " + puzzle.getHeight() + "\n" +
 						"figureW = " + figureWidth + "   figureH = " + figureHeight;
 
 		System.out.println(params);
+		*/
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		//this.setLayout(new GridLayout(dimension-1, dimension));
 		
@@ -81,12 +85,20 @@ public class Board extends JPanel{
 		messBoard();
 		
 		remover();
-		
+		if(savedResults != null) {
+			
+			int size = completeBoard.size();
+			for(int i = 0; i < size; i++) {
+				completeBoard.get(i).getFigure().setState(savedResults[i]);
+			}
+			updateBoard();
+		}
 	}
+	
 	public void messBoard(){
 		
-		Random randomGenerator = new Random();
-		ArrayList<Cell> cellStore = new ArrayList<Cell>(completeBoard);
+		//Random randomGenerator = new Random();
+		//ArrayList<Cell> cellStore = new ArrayList<Cell>(completeBoard);
 		int index = 0;
 		for(int i = 0; i<dimensionX; i++){
 			for(int j = 0; j<dimensionY; j++){
@@ -96,7 +108,7 @@ public class Board extends JPanel{
 					continue;
 				}
 				*/
-				int randomIndex = randomGenerator.nextInt(completeBoard.size());
+				//int randomIndex = randomGenerator.nextInt(completeBoard.size());
 				//completeBoard.get(randomIndex).getFigure().setPos(i, j);
 				completeBoard.get(index).getFigure().setPos(i, j);
 				//board[i][j] = new Cell(i, j, completeBoard.get(randomIndex).getFigure());
@@ -106,7 +118,7 @@ public class Board extends JPanel{
 
 			}
 		}
-		completeBoard = cellStore;
+		//completeBoard = cellStore;
 		
 		remover();
 	}
@@ -156,5 +168,17 @@ public class Board extends JPanel{
 	
 	public String getLastSolved() {
 		return lastSolved;
+	}
+	
+	public int getPicSize() {
+		return picSize;
+	}
+	
+	public String getImgPath() {
+		return imgPath;
+	}
+	
+	public ArrayList<Cell> getCompleteBoard() {
+		return completeBoard;
 	}
 }

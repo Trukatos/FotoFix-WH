@@ -2,64 +2,54 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
 
 public class Puzzle extends JFrame{
 	//=============================== panels
-	private static JPanel puzzelArea;
-	private JPanel timeMoves;
+	private static JTabbedPane tabbedPane;
+	private static JPanel puzzleArea;
 	//=============================== images and icons
 	private Image windowIcon = ImageLoader.loadImage("puzzleIcon.png");
-	private BufferedImage playIcon, stopIcon, retryIcon, newGameIcon, rngIcon; 
+	private BufferedImage newGameIcon, rngIcon, saveIcon, restoreIcon; 
 	private static BufferedImage def = ImageLoader.loadImage("defaultLong.png");
 	//=============================== toolbar and its items
 	private JToolBar toolbar = new JToolBar(); //horizontal aligment by default
 	private JButton newGameButton;
 	private JButton rngButton;
+	private JButton saveButton;
+	private JButton restoreButton;
 	
 	//=============================== labels
-	private JLabel time = new JLabel(" 0 : 0 : 0 ");
 	private JLabel owner = new JLabel("<html><div style='text-align: center;'>" + "FotoFix Deluxe von Mathias Assmann" + "</div></html>", SwingConstants.RIGHT);
-	private JLabel solveLabel = new JLabel("", SwingConstants.CENTER);
+	private JLabel announcer = new JLabel("", SwingConstants.CENTER);
 	private final String feld = "Feld ";
 	private final String solveDisclaimer = " wurde gelöst!";
-	private static int moveCount = 0;
-	private static JLabel moves = new JLabel(" "+moveCount+" ");
-	private JLabel timeTitle = new JLabel(" Time ");
-	private JLabel movesTitle = new JLabel("      Moves      ");
 	//=============================== final values
-	private int width = 928;
-	private int height = 995;
+	private int width = 950;
+	private int height = 1050;
 	
 	private JTextField wText = new JTextField(Integer.toString(width));
 	private JTextField hText = new JTextField(Integer.toString(height));
 	
 	private final int iconSize = 30;
 	private final int fontSize = 18;
-	private final int delay = 1000;
-	//=============================== chronometer values
-	private int seconds = 0;
-	private int minutes = 0;
-	private int hours = 0;
 	//=============================== board, miniImage and timer (statics)
-	private static JButton miniImage = new JButton(new ImageIcon(def.getScaledInstance(200, 200, Image.SCALE_DEFAULT)));
-	private static Board board = null;
-	private static Timer chronometer;
+	private static LinkedList<Board> boards = new LinkedList<Board>();
 	private static Container container;
 	
 
@@ -77,41 +67,57 @@ public class Puzzle extends JFrame{
 		this.setResizable(false);
 		this.setIconImage(windowIcon);
 		container = this.getContentPane();
-		chronometer = new Timer(delay, new IconTimerListener());
 		//=============================== load all images and icons
-		playIcon = ImageLoader.loadImage("playIcon.png");
-		stopIcon = ImageLoader.loadImage("stopIcon.png");
-		retryIcon = ImageLoader.loadImage("retryIcon.png");
 		newGameIcon = ImageLoader.loadImage("newIcon.png");
-		rngIcon = ImageLoader.loadImage("rngIcon.png");	
+		rngIcon = ImageLoader.loadImage("rngIcon.png");
+		saveIcon = ImageLoader.loadImage("saveIcon.png");
+		restoreIcon = ImageLoader.loadImage("restoreIcon.png");
 		//=============================== Initialize all toolbar items
 		
 		newGameButton = new JButton(new ImageIcon(newGameIcon.getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT)));
 		newGameButton.setName("new");
-		newGameButton.addActionListener(new IconTimerListener());
+		newGameButton.setToolTipText("Neues Spielfeld öffnen");
+		newGameButton.addActionListener(new MenuButtonListener());
 		
 		rngButton = new JButton(new ImageIcon(rngIcon.getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT)));
 		rngButton.setName("random");
-		rngButton.addActionListener(new IconTimerListener());
-		//=============================== initialize panels
-		puzzelArea = new JPanel();
-		puzzelArea.setOpaque(true);
-		puzzelArea.setBackground(Color.BLACK);
+		rngButton.setToolTipText("Zufälligen Teil des aktuellen Spielfelds lösen");
+		rngButton.addActionListener(new MenuButtonListener());
 		
-		timeMoves = new JPanel();
-		timeMoves.setLayout(new FlowLayout(FlowLayout.CENTER));
-		timeMoves.setOpaque(true);
-		timeMoves.setBackground(Color.BLACK);
+		saveButton = new JButton(new ImageIcon(saveIcon.getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT)));
+		saveButton.setName("save");
+		saveButton.setToolTipText("Alle Spielfelder speichern");
+		saveButton.addActionListener(new MenuButtonListener());
+		
+		restoreButton = new JButton(new ImageIcon(restoreIcon.getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT)));
+		restoreButton.setName("restore");
+		restoreButton.setToolTipText("Letzten Speicherstand wiederherstellen");
+		restoreButton.addActionListener(new MenuButtonListener());
+		
+		
+		//=============================== initialize panels		
+		puzzleArea = new JPanel();
+		puzzleArea.setOpaque(true);
+		puzzleArea.setBackground(Color.BLACK);
+		
+		tabbedPane = new JTabbedPane();
+		tabbedPane.setPreferredSize(new Dimension(800, 120));
+		tabbedPane.addTab("<Teamname + Bildgröße>", puzzleArea);
+		
+		ButtonTabComponent btc = new ButtonTabComponent(tabbedPane, boards);
+		tabbedPane.setTabComponentAt(0, btc);
 		
 		//=============================== add buttons to the toolbar
 		toolbar.add(newGameButton);
 		toolbar.add(rngButton);
+		toolbar.add(saveButton);
+		toolbar.add(restoreButton);
 		
 		owner.setFont(new Font("Georgia", Font.BOLD, fontSize));
 		owner.setForeground(Color.BLACK);
 		
-		solveLabel.setFont(new Font("Georgia", Font.BOLD, fontSize));
-		solveLabel.setForeground(Color.BLACK);
+		announcer.setFont(new Font("Georgia", Font.BOLD, fontSize));
+		announcer.setForeground(Color.BLACK);
 		
 		/*
 		ActionListener textAction = new ActionListener() {
@@ -129,95 +135,62 @@ public class Puzzle extends JFrame{
 		*/
 		
 		
-		wText.addActionListener(new IconTimerListener());
-		hText.addActionListener(new IconTimerListener());
+		wText.addActionListener(new MenuButtonListener());
+		hText.addActionListener(new MenuButtonListener());
 		wText.setVisible(false);
 		hText.setVisible(false);
 		
 		toolbar.addSeparator(new Dimension(20, 20));
-		toolbar.add(solveLabel);
+		toolbar.add(announcer);
 		toolbar.add(owner);
 		
 		toolbar.add(wText);
 		toolbar.add(hText);
 		
-		//=============================== set labels properties
-		time.setForeground(Color.RED);
-		time.setFont(new Font("Georgia", Font.BOLD, fontSize));
-		
-		moves.setForeground(Color.RED);
-		moves.setFont(new Font("Georgia", Font.BOLD, fontSize));
-		
-		timeTitle.setFont(new Font("Georgia", Font.BOLD, fontSize));
-		timeTitle.setForeground(Color.RED);
-		
-		movesTitle.setFont(new Font("Georgia", Font.BOLD, fontSize));
-		movesTitle.setForeground(Color.RED);
-		
 		//=============================== add components to panels
-		puzzelArea.add(new JLabel(new ImageIcon(def)));
-				
-		timeMoves.add(miniImage);
-
-		timeMoves.add(timeTitle);
-		timeMoves.add(time);
-		timeMoves.add(movesTitle);
-		timeMoves.add(moves);
+		puzzleArea.add(new JLabel(new ImageIcon(def)));
 		
 		container.add(toolbar, BorderLayout.NORTH);
-		container.add(puzzelArea, BorderLayout.CENTER);
+//		container.add(puzzelArea, BorderLayout.CENTER);
+		container.add(tabbedPane, BorderLayout.CENTER);
 		
 		
 		//container.add(timeMoves, BorderLayout.CENTER);
 	}
-	class IconTimerListener implements ActionListener{
+	class MenuButtonListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object comp = e.getSource();
 			if(comp instanceof JButton){
 				JButton button = (JButton)comp;
-				if(button.getName().equals("stop")){
-					if(board != null){
-						chronometer.stop();
-						button.setIcon(new ImageIcon(playIcon.getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT)));
-						button.setName("play");
-						board.setVisible(false);
-					}
 					
 
-				}else if(button.getName().equals("play")){
-					if(board != null){
-						chronometer.start();
-						button.setIcon(new ImageIcon(stopIcon.getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT)));
-						button.setName("stop");
-						board.setVisible(true);
-					}
-
-				}else if(button.getName().equals("retry")){
-					moveCount = 0;
-					seconds = 0;
-					minutes = 0;
-					hours = 0;
-					time.setText(" "+hours+" : "+minutes+" : "+seconds+" ");
-					moves.setText(" "+moveCount+" ");
-					if(board != null)
-						board.messBoard();
-					
-				}else if(button.getName().equals("new")){
-					StartPuzzle start = new StartPuzzle();
+				if(button.getName().equals("new")){
+					new StartPuzzle();
 				
 				} else if(button.getName().equals("random")) {
-					if(board != null) {
+					if(boards.size() > 0) {
+						Board board = boards.get(tabbedPane.getSelectedIndex());					
 						board.solveRandom();
 						String lastSolved = board.getLastSolved();
 						if(lastSolved == "") {
-							solveLabel.setText("");
+							announcer.setText("");
 						} else {
-							solveLabel.setText(feld + board.getLastSolved() + solveDisclaimer);
+							announcer.setText(feld + board.getLastSolved() + solveDisclaimer);
 						}
 						
 					}
+				} else if(button.getName().equals("save")) {
+					if(boards.size() > 0) {
+						SaveManager sm = new SaveManager(tabbedPane, boards);
+						sm.save();
+						announcer.setText("Speicherstand wurde erstellt!");
+					}
+				} else if(button.getName().equals("restore")) {
+						SaveManager sm = new SaveManager(tabbedPane, boards);
+						sm.restore();
+						announcer.setText("Speicherstand wurde geladen!");
 				}
 			
 			}else if(comp instanceof JTextField){
@@ -230,29 +203,22 @@ public class Puzzle extends JFrame{
 		}
 		
 	}
-	public static void start(BufferedImage img, int picSize, BufferedImage mini){
-		miniImage.setIcon(new ImageIcon(mini));
-		if(board != null)
-			container.remove(board);
-						
+	public static void start(String imgPath, BufferedImage img, int picSize, String title, int[] savedResults) {
 		
-		board = new Board(picSize, img);
-		chronometer.start();
-		container.remove(puzzelArea);
-		container.add(board, BorderLayout.CENTER);
-		container.validate();
+		Board board = new Board(picSize, img, imgPath, savedResults);
+		boards.add(board);
+		if(tabbedPane.getTabCount() == 1)
+			tabbedPane.remove(puzzleArea);
+		
+		tabbedPane.addTab(title, board);		
+		int i = tabbedPane.getTabCount() - 1;
+		ButtonTabComponent btc = new ButtonTabComponent(tabbedPane, boards);
+		tabbedPane.setTabComponentAt(i, btc);
+		tabbedPane.setSelectedIndex(i);
+		tabbedPane.validate();
 	}
-	public static Board getBoard() {
-		return board;
-	}
-	public static void add(){
-		moveCount ++;
-		moves.setText(" "+moveCount+" ");
-	}
-	public static Timer getTimer(){
-		return chronometer;
-	}
-	public static Container getContainer(){
-		return container;
+	
+	public static Container getContainer() {
+		return container;		
 	}
 }
