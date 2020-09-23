@@ -27,6 +27,10 @@ public class Puzzle extends JFrame{
 	private Image windowIcon = ImageLoader.loadImage("puzzleIcon.png");
 	private BufferedImage newGameIcon, rngIcon, saveIcon, restoreIcon; 
 	private static BufferedImage def = ImageLoader.loadImage("defaultLong.png");
+	
+	public static BufferedImage blocked = ImageLoader.loadImage("/redX.png");
+	public static ImageIcon blocked32, blocked72, blocked128;
+	
 	//=============================== toolbar and its items
 	private JToolBar toolbar = new JToolBar(); //horizontal aligment by default
 	private JButton newGameButton;
@@ -72,6 +76,11 @@ public class Puzzle extends JFrame{
 		rngIcon = ImageLoader.loadImage("rngIcon.png");
 		saveIcon = ImageLoader.loadImage("saveIcon.png");
 		restoreIcon = ImageLoader.loadImage("restoreIcon.png");
+		
+		blocked32 = new ImageIcon(blocked.getScaledInstance(225, 112, Image.SCALE_SMOOTH));
+		blocked72 = new ImageIcon(blocked.getScaledInstance(150, 75, Image.SCALE_SMOOTH));
+		blocked128 = new ImageIcon(blocked.getScaledInstance(112, 56, Image.SCALE_SMOOTH));
+		
 		//=============================== Initialize all toolbar items
 		
 		newGameButton = new JButton(new ImageIcon(newGameIcon.getScaledInstance(iconSize, iconSize, Image.SCALE_DEFAULT)));
@@ -182,15 +191,11 @@ public class Puzzle extends JFrame{
 						
 					}
 				} else if(button.getName().equals("save")) {
-					if(boards.size() > 0) {
-						SaveManager sm = new SaveManager(tabbedPane, boards);
-						sm.save();
-						announcer.setText("Speicherstand wurde erstellt!");
-					}
+					SaveManager sm = new SaveManager(tabbedPane, boards);
+					announcer.setText(sm.save());
 				} else if(button.getName().equals("restore")) {
-						SaveManager sm = new SaveManager(tabbedPane, boards);
-						sm.restore();
-						announcer.setText("Speicherstand wurde geladen!");
+					SaveManager sm = new SaveManager(tabbedPane, boards);
+					announcer.setText(sm.restore());
 				}
 			
 			}else if(comp instanceof JTextField){

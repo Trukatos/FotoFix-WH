@@ -36,7 +36,9 @@ public class SaveManager {
 		this.path = Paths.get(System.getProperty("user.dir") + "/FotoFix Speicherstand.txt");
 	}
 	
-	public void save() {
+	public String save() {
+		if(boards.size() == 0)
+			return "Es gibt nichts zu speichern!";
 		ArrayList<String> lines = new ArrayList<String>();
 		int tabCount = tabbedPane.getTabCount();
 		lines.add(Integer.toString(tabCount));
@@ -52,14 +54,17 @@ public class SaveManager {
 			lines.add(s);
 		}
 		try {
+			if(Files.notExists(path))
+				Files.createFile(path);
 		    Files.write(path, lines, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return "Speicherstand wurde erstellt!";
 	}
 	
-	public void restore() {
+	public String restore() {
 		try {
 			if(Files.exists(path)) {
 				tabbedPane.removeAll();
@@ -94,10 +99,12 @@ public class SaveManager {
 						System.out.println("Kein Bild erkannt! Wähle ein Bild im Format jpg oder png");
 					}
 				}
-			}
+				return "Speicherstand wurde geladen!";
+			} else
+				return "Keinen Speicherstand gefunden!";
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "Unerwarteter Fehler!";
 		}
 	}
 }

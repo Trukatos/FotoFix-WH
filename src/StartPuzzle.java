@@ -31,7 +31,7 @@ public class StartPuzzle extends JFrame implements ActionListener{
 	private JLabel sizeDescriptor;
 	private JLabel descriptorLabel = new JLabel("<html><body>&nbsp&nbsp&nbsp Wähle Bild und<br>Schwierigkeitsgrad</body></html>", SwingConstants.CENTER);
 	private JLabel picTitleLabel = new JLabel("Bildbeschreibung:", SwingConstants.CENTER);
-	private JTextField picTitleField = new JTextField("Team 1 Small/Big");
+	private JTextField picTitleField = new JTextField("<Teamname>");
 	private JFileChooser fileChooser;
 	private int picSize = 32;
 	private String picLabel = "S";
@@ -176,7 +176,22 @@ public class StartPuzzle extends JFrame implements ActionListener{
 				return;
 			BufferedImage puzzleImage = ImageResizer.resizeImage(image, 900, 900);
 			
-			String title = picTitleField.getText();
+			String title = picTitleField.getText() + " " + picLabel;
+			/*
+			String titleSuffix = "";
+			switch(picLabel) {
+			case "S":
+				titleSuffix = "Small";
+				break;
+			case "M":
+				titleSuffix = "Medium";
+				break;
+			case "L":
+				titleSuffix = "Large";
+				break;
+			}
+			title += " " + titleSuffix;
+			*/
 			Puzzle.start(imgPath, puzzleImage, picSize, title, null);
 			this.dispose();
 		}

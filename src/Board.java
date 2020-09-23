@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
@@ -56,7 +57,6 @@ public class Board extends JPanel{
 		y = 0;
 		figureWidth = puzzle.getWidth()/dimensionX;
 		figureHeight = puzzle.getHeight()/dimensionY;
-
 		/*
 		String params = "dimX = " + dimensionX + "   dimY = " + dimensionY + "\n" +
 						"puzzleW = " + puzzle.getWidth() + "   puzzleH = " + puzzle.getHeight() + "\n" +
@@ -66,7 +66,6 @@ public class Board extends JPanel{
 		*/
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		//this.setLayout(new GridLayout(dimension-1, dimension));
-		
 		
 		for(int i=0; i<dimensionY; i++){
 			for(int j=0; j<dimensionX; j++){

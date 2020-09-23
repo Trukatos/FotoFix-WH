@@ -1,8 +1,10 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -13,6 +15,7 @@ public class Figure extends JButton implements ActionListener{
 	private final int solutionPosX;
 	private final int solutionPosY;
 	private final ImageIcon solved;
+	private final ImageIcon blocked;
 	private int state;
 	private final int HIDDEN = 0;
 	private final int BLOCKED = 1;
@@ -24,19 +27,26 @@ public class Figure extends JButton implements ActionListener{
 		switch(picSize) {
 			case 32:
 				fontSize = 60;
+				this.blocked = Puzzle.blocked32;
 				break;
-			case 64:
+			case 72:
 				fontSize = 40;
+				this.blocked = Puzzle.blocked72;
 				break;
 			case 128:
 				fontSize = 20;
+				this.blocked = Puzzle.blocked128;
 				break;
+			default:
+				this.blocked = Puzzle.blocked32;;
 		}
 		this.solutionPosX = solPosX;
 		this.solutionPosY = solPosY;
 		this.posX = solPosX;
 		this.posY = solPosY;
 		this.solved = figure;
+				
+		
 		this.state = HIDDEN;
 		this.numLabel = Integer.toString((posY + 1) + posX * numCols);
 		this.setBackground(Color.WHITE);
@@ -112,9 +122,9 @@ public class Figure extends JButton implements ActionListener{
 	}
 	
 	public void block() {
-		this.setIcon(null);
+		this.setIcon(blocked);
 		this.setForeground(Color.RED);
-		this.setText("X");
+		this.setText("");
 		this.state = BLOCKED;
 	}
 
