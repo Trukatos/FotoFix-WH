@@ -26,3 +26,11 @@
 /SaveManager.class
 /redX.png
 /redX2.png
+/Board.class
+/Cell.class
+/Figure.class
+/ImageLoader.class
+/ImageResizer.class
+/Launcher.class
+/Puzzle.class
+/StartPuzzle.class
