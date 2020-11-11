@@ -68,7 +68,7 @@ public class Puzzle extends JFrame{
 		this.setLocationRelativeTo(null);
 		this.setMinimumSize(new Dimension(800, 600));
 		this.setMaximumSize(new Dimension(width, height));
-		this.setResizable(false);
+		this.setResizable(true);
 		this.setIconImage(windowIcon);
 		container = this.getContentPane();
 		//=============================== load all images and icons
