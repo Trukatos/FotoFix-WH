@@ -14,15 +14,15 @@ import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
+//import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
+@SuppressWarnings("serial")
 public class StartPuzzle extends JFrame implements ActionListener{
 	private JPanel main = new JPanel();
 	private JButton open, start;
@@ -32,7 +32,7 @@ public class StartPuzzle extends JFrame implements ActionListener{
 	private JLabel descriptorLabel = new JLabel("<html><body>&nbsp&nbsp&nbsp Wähle Bild und<br>Schwierigkeitsgrad</body></html>", SwingConstants.CENTER);
 	private JLabel picTitleLabel = new JLabel("Bildbeschreibung:", SwingConstants.CENTER);
 	private JTextField picTitleField = new JTextField("<Teamname>");
-	private JFileChooser fileChooser;
+	//private JFileChooser fileChooser;
 	private int picSize = 32;
 	private String picLabel = "S";
 	private BufferedImage image = null;

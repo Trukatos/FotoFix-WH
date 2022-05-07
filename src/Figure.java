@@ -1,14 +1,13 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+@SuppressWarnings("serial")
 public class Figure extends JButton implements ActionListener{
 	private int posX;
 	private int posY;

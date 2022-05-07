@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,6 +9,7 @@ import java.util.LinkedList;
  * Contains a JLabel to show the text and 
  * a JButton to close the tab it belongs to 
  */ 
+@SuppressWarnings("serial")
 public class ButtonTabComponent extends JPanel {
     private final JTabbedPane pane;
     private LinkedList<Board> boards;
